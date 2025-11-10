@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         ], ['code'], ['name', 'symbol', 'active']);
 
         // Example user
-        User::factory()->create([
+        User::factory()->withoutTwoFactor()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);

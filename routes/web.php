@@ -5,6 +5,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderPaymentController;
 use App\Http\Controllers\QuickUserController;
 use App\Http\Controllers\UserSearchController;
+use App\Models\OrderItem;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -15,9 +17,15 @@ Route::get('/', function () {
         range(0, 999)
     );
 
+    $numbersInOrders = OrderItem::whereHas('order',fn(Builder $q) => $q->whereNot('status', \App\Enums\OrderStatus::Cancelada))
+        ->pluck('number')
+        ->toArray();
+
+
     return Inertia::render('raffle/Index', [
         'numbers' => $numbers,
         'canRegister' => Features::enabled(Features::registration()),
+        'taken' => $numbersInOrders,
     ]);
 })->name('home');
 

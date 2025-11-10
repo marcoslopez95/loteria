@@ -148,7 +148,7 @@ function statusBadge(status: string) {
           </div>
           <div>
             <Label for="paid_at">Fecha</Label>
-            <Input id="paid_at" name="paid_at" type="datetime-local" v-model="paidAt" />
+            <Input id="paid_at" name="paid_at" type="date" v-model="paidAt" />
             <InputError :message="errors.paid_at" />
           </div>
 

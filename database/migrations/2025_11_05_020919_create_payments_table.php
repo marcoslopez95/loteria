@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('currency_id')->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->decimal('amount', 12, 2); // in currency units
             $table->decimal('exchange_rate', 16, 8)->default(1); // units of currency per 1 USD
-            $table->string('reference')->unique();
+            $table->string('reference')->nullable()->unique();
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
 

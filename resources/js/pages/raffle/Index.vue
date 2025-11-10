@@ -6,7 +6,7 @@ withDefaults(
   defineProps<{
     numbers: string[]
     taken?: string[]
-    canRegister?: boolean
+    canRegister?: boolean,
   }>(),
   {
     canRegister: true,

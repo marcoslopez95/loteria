@@ -7,8 +7,16 @@ import InputError from '@/components/InputError.vue'
 import { create as ordersCreate, store as ordersStore } from '@/routes/orders'
 import usersRoutes from '@/routes/users'
 import { dashboard } from '@/routes'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch,defineProps,withDefaults } from 'vue'
 
+const {taken} = withDefaults(
+    defineProps<{
+        taken?: string[]
+    }>(),
+    {
+        taken: () => [],
+    },
+)
 // Local state for selecting existing user or quick user creation
 const mode = ref<'existing' | 'quick'>('quick')
 const userId = ref<number | null>(null)
@@ -48,6 +56,9 @@ const allNumbers = Array.from({ length: 1000 }, (_, i) => String(i).padStart(3, 
 const selected = ref<Set<string>>(new Set())
 
 function toggle(n: string) {
+    if(taken.includes(n)){
+        return;
+    }
   if (selected.value.has(n)) {
     selected.value.delete(n)
   } else {
@@ -142,7 +153,11 @@ function buildPayload() {
             :key="n"
             type="button"
             class="rounded-md px-2 py-2 text-sm font-semibold ring-1 transition"
-            :class="selected.has(n) ? 'bg-teal-600 text-white ring-teal-700' : 'bg-white dark:bg-white/10 text-teal-900 dark:text-white ring-black/10 dark:ring-white/10 hover:bg-black/5 dark:hover:bg-white/15'"
+            :class="[
+            selected.has(n) ? 'bg-teal-600 text-white ring-teal-700' : 'bg-white dark:bg-white/10 text-teal-900 dark:text-white ring-black/10 dark:ring-white/10 hover:bg-black/5 dark:hover:bg-white/15',
+            taken.includes(n) ? 'is-taken' : ''
+            ]
+            "
             @click="toggle(n)"
           >
             {{ n }}
@@ -158,3 +173,9 @@ function buildPayload() {
     </Form>
   </div>
 </template>
+
+<style>
+.is-taken {
+    background-color:red;
+}
+</style>

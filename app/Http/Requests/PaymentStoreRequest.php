@@ -25,7 +25,7 @@ class PaymentStoreRequest extends FormRequest
             'amount' => ['required', 'decimal:0,2', 'min:0.01'],
             'currency_id' => ['required', 'integer', 'exists:currencies,id'],
             'exchange_rate' => ['required', 'decimal:0,8', 'min:0.00000001'],
-            'reference' => ['required', 'string', 'max:255', 'unique:payments,reference'],
+            'reference' => ['nullable', 'string', 'max:255', 'unique:payments,reference'],
             'paid_at' => ['nullable', 'date'],
         ];
     }

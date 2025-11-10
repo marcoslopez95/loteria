@@ -6,7 +6,9 @@ use App\Enums\OrderStatus;
 use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\OrderUpdateRequest;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -34,7 +36,12 @@ class OrderController extends Controller
      */
     public function create(): InertiaResponse
     {
-        return Inertia::render('orders/Create');
+        $numbersInOrders = OrderItem::whereHas('order',fn(Builder $q) => $q->whereNot('status', \App\Enums\OrderStatus::Cancelada))
+            ->pluck('number')
+            ->toArray();
+        return Inertia::render('orders/Create',[
+            'taken' => $numbersInOrders,
+        ]);
     }
 
     /**
@@ -115,7 +122,7 @@ class OrderController extends Controller
     public function update(OrderUpdateRequest $request, Order $order): RedirectResponse
     {
         $data = $request->validated();
-
+        $quantityNumberBefore = $order->items->count();
         if (! empty($data['items'])) {
             // Replace items
             $order->items()->delete();
@@ -136,6 +143,8 @@ class OrderController extends Controller
         // Only allow manual cancellation; Pagada is automatic by payments
         if (! empty($data['status']) && $data['status'] === OrderStatus::Cancelada->value) {
             $order->status = OrderStatus::Cancelada;
+        }else if ($quantityNumberBefore !== count($data['items'])) {
+            $order->status = OrderStatus::PorPagar;
         }
 
         $order->notes = $data['notes'] ?? $order->notes;
