@@ -31,9 +31,10 @@ it('logs in with valid credentials', function () {
             '_token' => $token,
         ]);
 
-    // Fortify should redirect to intended location (dashboard by default)
-    $response->assertRedirect(route('dashboard'));
+    // With two-factor enabled and configured by default in factories,
+    // Fortify redirects to the 2FA challenge after validating credentials.
+    $response->assertRedirect(url('/two-factor-challenge'));
 
-    // Assert user is authenticated
-    expect(auth()->check())->toBeTrue();
+    // At this point the user is not fully authenticated until 2FA step completes.
+    // So we don't assert auth()->check() here.
 });

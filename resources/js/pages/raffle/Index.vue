@@ -5,10 +5,12 @@ import { dashboard, login, register } from '@/routes'
 withDefaults(
   defineProps<{
     numbers: string[]
+    taken?: string[]
     canRegister?: boolean
   }>(),
   {
     canRegister: true,
+    taken: () => [],
   },
 )
 </script>
@@ -79,6 +81,7 @@ withDefaults(
             v-for="n in numbers"
             :key="n"
             class="group relative isolate overflow-hidden rounded-lg bg-white text-center text-sm font-semibold text-teal-900 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-md dark:bg-white/10 dark:text-white dark:ring-white/10"
+            :class="{ 'is-taken': taken.includes(n) }"
           >
             <div class="absolute inset-0 -z-10 opacity-0 transition group-hover:opacity-100" aria-hidden>
               <div class="absolute -left-6 -top-6 h-12 w-12 rotate-45 bg-teal-400/40 blur-xl" />
@@ -98,3 +101,9 @@ withDefaults(
     </footer>
   </div>
 </template>
+
+<style>
+.is-taken {
+    background-color:red;
+}
+</style>

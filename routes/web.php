@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderPaymentController;
+use App\Http\Controllers\QuickUserController;
+use App\Http\Controllers\UserSearchController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -19,5 +24,17 @@ Route::get('/', function () {
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth'])->group(function (): void {
+    Route::resource('currencies', CurrencyController::class);
+    Route::resource('orders', OrderController::class);
+
+    Route::post('orders/{order}/payments', [OrderPaymentController::class, 'store'])->name('orders.payments.store');
+    Route::patch('orders/{order}/payments/{payment}', [OrderPaymentController::class, 'update'])->name('orders.payments.update');
+    Route::delete('orders/{order}/payments/{payment}', [OrderPaymentController::class, 'destroy'])->name('orders.payments.destroy');
+
+    Route::get('users/search', UserSearchController::class)->name('users.search');
+    Route::post('users/quick', [QuickUserController::class, 'store'])->name('users.quick.store');
+});
 
 require __DIR__.'/settings.php';
