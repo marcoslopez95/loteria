@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@inertiajs/core':
+        specifier: ^2.2.15
+        version: 2.2.15
       '@inertiajs/vue3':
         specifier: ^2.1.0
         version: 2.2.15(vue@3.5.22(typescript@5.9.3))
