@@ -23,8 +23,7 @@ class OrderController extends Controller
         $orders = Order::query()
             ->with('user')
             ->latest('id')
-            ->paginate(15)
-            ->withQueryString();
+            ->get();
 
         return Inertia::render('orders/Index', [
             'orders' => $orders,
