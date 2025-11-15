@@ -12,15 +12,17 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    $numbers = array_map(
-        fn (int $n): string => str_pad((string) $n, 3, '0', STR_PAD_LEFT),
-        range(0, 999)
-    );
-
     $numbersInOrders = OrderItem::whereHas('order',fn(Builder $q) => $q->whereNot('status', \App\Enums\OrderStatus::Cancelada))
         ->pluck('number')
         ->toArray();
 
+    $numbers = array_filter(
+     array_map(
+        fn (int $n): string => str_pad((string) $n, 3, '0', STR_PAD_LEFT),
+        range(0, 999)
+    ),
+        fn($n): bool => !in_array($n, $numbersInOrders)
+    );
 
     return Inertia::render('raffle/Index', [
         'numbers' => $numbers,
