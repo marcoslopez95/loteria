@@ -26,7 +26,7 @@ class OrderController extends Controller
             ->get();
 
         return Inertia::render('orders/Index', [
-            'orders' => $orders,
+            'orders' => ['data'=>$orders],
         ]);
     }
 
