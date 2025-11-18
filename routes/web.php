@@ -32,7 +32,18 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
+    $count_orders = \App\Models\Order::query()
+        ->join('order_items as oi','oi.order_id','=','orders.id')
+        ->select([
+            'orders.status',
+            \Illuminate\Support\Facades\DB::raw('count(oi.id) as total')
+        ])
+        ->whereNot('orders.status',"\"".\App\Enums\OrderStatus::Cancelada->value."\"")
+        ->groupBy('orders.status')
+        ->get();
+    return Inertia::render('Dashboard',[
+        'count_orders' => $count_orders
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function (): void {

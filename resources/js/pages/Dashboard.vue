@@ -4,6 +4,12 @@ import { index as ordersIndex } from '@/routes/orders'
 import { index as currenciesIndex } from '@/routes/currencies'
 import { home as homeRoute } from '@/routes'
 
+defineProps<{
+    count_orders: {
+        status: string;
+        total: number;
+    }[]
+}>()
 // No props required for now
 </script>
 
@@ -48,5 +54,15 @@ import { home as homeRoute } from '@/routes'
         </div>
       </Link>
     </div>
+      <table>
+          <tr>
+              <td>Estado</td>
+              <td>Total</td>
+          </tr>
+          <tr v-for="(order,i) in count_orders" :key="i">
+              <td>{{ order.status }}</td>
+              <td>{{ order.total }}</td>
+          </tr>
+      </table>
   </div>
 </template>

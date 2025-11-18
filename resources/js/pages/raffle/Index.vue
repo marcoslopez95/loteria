@@ -1,6 +1,17 @@
 <script setup lang="ts">
+import {ref} from "vue"
 import { Head, Link } from '@inertiajs/vue3';
 import { dashboard, login, logout, register } from '@/routes';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+
 
 withDefaults(
     defineProps<{
@@ -13,9 +24,20 @@ withDefaults(
         taken: () => [],
     },
 );
+const modal = ref(true)
 </script>
 
 <template>
+    <Dialog :open="modal">
+        <DialogContent @close="modal = false">
+            <DialogHeader>
+                <DialogTitle>¡Margarita te espera!</DialogTitle>
+                <DialogDescription>
+                    <img src="SORTEO-VIAJE-min.png"/>
+                </DialogDescription>
+            </DialogHeader>
+        </DialogContent>
+    </Dialog>
     <Head title="Rifa • Viaje a Margarita" />
 
     <div
@@ -187,6 +209,7 @@ withDefaults(
             © {{ new Date().getFullYear() }} Rifa Margarita — Operado con
             seguridad y transparencia.
         </footer>
+
     </div>
 </template>
 
